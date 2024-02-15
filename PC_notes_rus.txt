@@ -1,0 +1,457 @@
+#!/bin/cat
+
+
+Не удалять скрипты, в них есть примеры запуска qemu или …
+
+Скачать пакеты исходных текстов пакетов debian (используемых)
+
+Установить bind9, сохранить .deb
+Установить isc-dhcp-server, +.deb
+Дочитать описания пакетов с /bin/
+Какие уязвимости в VT-x, AMD-V, qemu-TCG?
+Как работает UEFI secure boot?
+Есть ли неизменность данных через linux/... (годится ли GELI из FreeBSD?)?
+Как работает GNU/Hurd?
+Дочитать FreeBSD user guide
+Составить новый список пакетов
+Подобрать комп. стол и ПК без Wi-Fi. Отдельно Wi-Fi USB, мышь и клавиатура USB, USB-hub с отдельным питанием, внений жёсткий диск USB, ИБП, монитор  и какой-то вариант звука, мб в мониторе.
+
+Что иметь установленного (и пакеты для установки) и просто в пакетах?
+ Установлено: openssh-server
+
+Скачать:
+ qemu source + needed
+ vbox binaries (6.0.24, 6, 7, 6 ext pack, 7 ext pack)
+  (win, linuxes, freebsd, openbsd, netbsd, ...)
+ spice-space win guest tools + webdavd
+ TRK (trinity rescue kit)
+ Fedora Image Writer, Balena Etcher, ... (rufus, unetbootin, ventoy, ...?)
+
+Скачать установщики APK программ на Android
+
+
+Начать использовать debian 12 и LMDE5
+
+Что делать с соединением с интернетом? Оно будет?
+
+
+
+
+
+
+
+Сделать большой конспект всего по Linux
+
+Составить список IP-адресов для /etc/hosts и для bind9, если он так работает (вместо 77.88.8.8 брать из /etc/hosts, если 77.88.8.8 недоступен)
+
+
+
+
+(при написании списка пакетов в скриптах добавить все доп. пакеты типа -doc, -l10n, ...)
+Пакеты debian:
+ 1. Самое необходимое (иначе я не могу смотреть на экран):
+  compiz, compizconfig-settings-manager (и можно simple-ccsm, но мне оно не нужно (может быть, через него можно изучить работу с настройками compiz или создавать профили и быстро между ними переключаться)
+  task-xfce-desktop, xfce4-xkb-plugin, xfce4-whiskermenu-plugin (среда XFCE (панели, рабочий стол, ...) и кнопка ПУСК и переключатель раскладок клавиатуры с индикатором (whiskermenu = ПУСК, xkb... = переключатель))
+  lightdm или другой display manager
+  Может быть, color filter для compiz установится только в пакетах с плагингами (и что ещё нужного там будет?):
+   compiz compiz-mate compiz-plugins-default compiz-plugins-extra compiz-plugins-main compiz-gnome compiz-core
+   emerald emerald-themes (emerald - оконный декоратор для compiz или для ...)
+   fusion-icon compiz-plugins-experimental
+ 2. Вторым приоритетом. Необходимо для некоторых задач:
+  mousepad (текстовый редактор XFCE)
+  nano-tiny (иначе не могу редактировать файлы в tty6, tty5, ...)
+  links2 (иначе нет подходящего браузера web без javaScript)
+ 2. Необходимо для "безопасной работы" в интернете или …:
+  aqemu (интерфейс для qemu) (для некоторых видов виртуальных машин достаточно aqemu и его зависимостей в LMDE5 (и не забыть qemu-system-gui (см. далее в списке), если оно не попадёт в зависимости))
+  qemu-utils
+  ovmf (Open Virtual Machine Firmware; UEFI BIOS для виртуальных машин под qemu (включая libvirt+qemu))
+  qemu-system-x86 (эмлятор и виртуализатор)
+  qemu-system-gui (оконный/графический интерфейс к qemu)
+  libvirt-daemon, libvirt-daemon-system, libvirt-daemon-system-systemd (демон libvirt для вирт. машин на libvirt+qemu)
+   +: настроить что-то типа dynamic_ownership=0 в файле /etc/libvirt/qemu.conf
+  libvirt-doc
+  virt-manager  virt-viewer libvirt-clients (клиенты для управления и контроля виртуальных машин под libvirt+qemu)
+  spice-client-gtk  spice-client-glib-usb-acl-helper libspice-client-gtk-3.0-5 libspice-client-glib-2.0-8 (не исключено, что эти нужны для работы virt-viewer и virt-manager)
+  скачать, но не установить: "python-is-python2" (для старых версий VirtualBox (6.0.24) на случай их установки) и что ещё нужно для этого VirtualBox (узнать заранее!)
+  При попытке установить virtualbox6.0.24 для ubuntu_eoan (из вайла .deb через gdebi-gtk) в систему LMDE5 (на базе Debian 11 bullseye) выдаёт зависимости
+  (см. также debitool или debi-tool (оно новее? в sparky linux на него переходили, кажется, с gdebi)):
+   libpython2-stdlib
+   libpython2.7-minimal
+   libpython2.7-stdlib
+   libqt5opengl5
+   libqt5printsupport5
+   libqt5x11extras5
+   libsdl1.2debian
+   python-is-python2
+   python2
+   python2-minimal
+   python2.7
+   python2.7-minimal
+ Необходимо для лучшей безопасности:
+  xscreensaver (блокировать графический сеанс)
+  vlock (блокировать все консоли)
+  screen (GNU Screen даёт защиту от падений xfce4-terminal (если само не упадёт и …)) (см. комментарий к links2)
+ 3.
+  basez (на случай вытаскивания LUKS Master Key через dmsetup table; там есть base16)
+  pwgen (генерация паролей, настраиваемая)
+ Проверка оперативной памяти:
+  memtest86+ версии 6.… (доступно как пакет в debian 11 (и LMDE5) (v5.…) и есть более новые версии (v6.…) для debian_11/LMDE5 в backports)
+ Системные настройки (программы для настройки):
+  gnome-system-tools
+ Управление пакетами в системе:
+  synaptic (оконный/графический интерфейс)
+  apt, apt-get, apt-cache, apt-file (командная строка, CLI)
+  aptitude (текстовый режим (ncurses) и командная строка (CLI))
+  (низкоуровневый): dpkg, dpkg-deb, dpkg-query, dpkg-divert, ...
+  gdebi
+  debi-tool или debitool (нет такого в системе LMDE5)
+ Сеть:
+  nmap, nmapsi4, mtr-tiny, traceroute..., tcpdump, wireshark, tshark, netcat-openbsd
+ Несколько пакетов на разные случаи:
+  htop vlock pwgen screen mc calc
+  build-essential (что-то для сборки программ и ...)
+  xorriso  brasero k3b k3b-i18n genisoimage (создание .iso)
+  xfburn (только прожиг .iso, без его создания)
+  growisofs (запись .iso на DVD)
+  cpuid tree di
+  bash bash-doc bash-completion 
+ Непонятно, зачем:
+  dvdbackup dvd+rw-tools cdw cdrkit-doc wodim isolinux syslinux syslinux-utils syslinux-efi extlinux
+ Офисные задачи:
+  Для печати и/или сканирования:
+   hplip hplip-doc hplip-gui
+  Менеджеры файлов:
+   mc (текстовый)
+  Калькуляторы:
+   calc (раньше был apcalc) (консольный (текстовый), может переводить в двоичную систему и обратно)
+   python3 (осторожно!, это не калькулятор, но что-то считать здесь можно (сначала узнайте, что здесь можно делать))
+   galculator, gnome-calculator, kcalc, mate-calc, wcalc (текстовый), qalculate-gtk
+  Обмен файлами:
+   SSH, SFTP:
+    openssh-server (перед установкой пакета выполнить команду "dpkg-divert --add --local --rename /etc/ssh/sshd_config", иначе можно открыть доступ всем. После установки внимательно настроить и выполнить (после настройки) "sync ; dpkg --configure openssh-server"). Это сервер ssh и SFTP
+    sshfs (подключить удалённые папки то ли через ssh, то ли через sftp) (sftp, кажется, работает через ssh)
+    aria2 (SFTP)
+   SMB (Windows общие папки; Server Message Block):
+    samba (опасно? см. openssh-server (как sftp server) + qemu или samba server + qemu (запускать серверы под виртуальной машиной))
+   FTP:
+    gftp (+ text вариант и др., см. "apt-cache search gftp")
+    filezilla
+    lftp
+    aria2?
+    FTP серверы:
+     vsftpd (опасная настройка по умолчанию!)
+     …
+   HTTP:
+    wget, curl, lftp, aria2
+   Torrent:
+    qbittorrent (основной клиент torrent)
+    Клиент torrent "Transmission":
+     transmission, transmission-cli, transmission-gtk. transmission-qt?
+    Создание .torrent файлов:
+     buildtorrent, mktorrent
+    Текстовые торрент клиенты:
+     rtorrent
+    Тоже работают с torrent:
+     aria2 (скачивает через Torrent) (текстовый?)
+     Клиенты Torrent:
+      ctorrent (клиент torrent)
+      biglybt (клиент torrent)
+      bitstormlite (клиент torrent)
+      deluge, deluge-console (клиент torrent обычный и текстовый)
+      kget? (менеджер загрузок)
+      ktorrent (клиент torrent)
+      lftp (текстовый клиент Torrent, HTTP, FTP)
+      unworkable (клиент Torrent)
+     btcheck (смотреть содержимое .torrent файла)
+     btfs (работать с закачкой как с файловой системой)
+     twatch (наблюдение за трекерами Torrent и автоматическая загрузка чего-то)
+  Редакторы изображений:
+   Растровых (пиксельные):
+    gimp (GIMP), krita, imagemagick (программы "convert" и другие из командной строки (CLI, command line interface, как у nmcli (в отличие от nmtui с Terminal User Interface или Text User Interface)))
+   Векторные:
+    inkscape, karbon, xfig
+  Редакторы текста:
+   mousepad, gedit, pluma, featherpad, leafpad, l3afpad, vim (см. команду "vimtutor"), nano, nano-tiny, geany
+  Клиенты электронной почты:
+   evolution? thunderbird. geary
+  Офисные пакеты:
+   libreoffice writer, calc, impress, ...(Word, Excel, PowerPoint, ...)
+    +: libreoffice draw, math, base
+   calligrasheets, calligrastage, calligrawords (Excel, PowerPoint, Word)
+   abiword, gnumeric (Word, Excel)
+  Запись видео с экрана:
+   simplescreenrecorder, kazam, peek, vokoscreen, vokoscreen-ng, obs-studio, ffmpeg (командная строка), recordmydesktop (командная строка). vlc?
+  Пересжатие видео:
+   ffmpeg (командная строка), vlc, handbrake. transmageddon (недоступен в LMDE5). kdenlive
+   shotcut?. openshot?. flowblade?
+  Редактирование видео:
+   kdenlive, shotcut, openshot, flowblade
+  Редактирование аудио:
+   audacity (+ здесь можно записать звук с микрофона. Кстати, см. alsamixer для настройки некоторых вещей (оно текстовое)), kwave
+  Пересжатие аудио:
+   flac, lame, audacity. kwave?
+  Проигрыватели аудио:
+   audacious?. mplayer (текстовый режим). vlc. cvlc (текстовый режим или командная строка)
+  Просмотр изображений:
+   geeqie, pix, ristretto, gwenview, gimp, krita, imagemagick, ...
+  Поиск файлов:
+   catfish
+  Работа с архивами:
+   xarchiver file-roller
+  Сканирование:
+   xsane, sane, sane-utils, (удалить из системы sane-airscan), simple-scan, ...
+   (см. команду "scanimage" командной строки, через неё можно выбрать глубину цвета 16bit в некоторых случаях (и есть другие настройки))
+  Печать:
+   что-то про cups. также, см. "system-config-printer" (или ...-printers)
+   для установки плагина HP (ОСТОРОЖНО! Не открытый исходный код! Может быть, запускать только в виртуальных машинах):
+    Либо запустить "hp-plugin" при доступном подключении к Интернету,
+    либо установить пакет "hplip-gui", перезагрузиться, пробовать печатать, имея пожключение к Интернету (преложит скачать и установить плагин через GUI, как это делает hp-plugin через текстовый режим)
+  Проигрывание видео:
+   smplayer, vlc, kmplayer, dragonplayer, kaffeine, qmmp. xplayer? parole? celluloid?
+  Скачать видео с youTube:
+   yt-dlp
+  Проигрывать youtube:
+   smtube, ...
+  Управление устройствами Android или эмулируемыми ими (см. google Android SDK (не проверялось, что adb/scrcpy работают с этим)):
+   adb, scrcpy (недоступно в Debian 12 bookworm, но есть в LMDE5 и debian 11 bullseye). fastboot?
+  Клиенты служб сообщений:
+   pidgin, gajim. psi?. hexchat
+  Веб-браузеры:
+   firefox или firefox-esr (зайти  в about:about, оттуда в about:config, там настроить javascript.enabled=false (чтобы отключить javaScript (так оно везде работает?)) и permissions.default.image=2 (чтобы много где не отображались картинки))
+   falkon (здесь можно отключить javaScript через настройки)
+   links2 (текстовый браузер без javaScript. Если запускать под GNU screen, можно копировать ссылки и текст (Ctrl+a, [, выделить, копировать, Esc) (или Ctrl+a, ":copy", Enter, выделить, копировать, Esc) (см. "$ man screen") (можно копировать через screen (без буфера обмена) и вставлять в том же screen через Ctrl+a, ]))
+   Дополнительные (и опасные?):
+    chromium dillo hv3 konqueror luakit midori netrik netsurf-gtk qutebrowser qutebrowser-qtwebengine qutebrowser-qtwebkit surf w3m w3m-img
+  Удалённый рабочий стол:
+   remmina, x11vnc, ... (осторожно, здесь есть серверы, дающие управление ПК (или виртуальной машиной), на котором они запускаются (например, x11vnc))
+  Виртуальная клавиатура:
+   onboard, ... (раньше было ещё florence)
+  Тезаурус анлийского (кажется, не требует подключения к интернету):
+   artha
+  Работа с образами DVD:
+   acetoneiso fuseiso iat mdf2iso
+  Только скачать (и не установить) для веб-камер и ...:
+   dov4l fswebcam megapixels qv4l2 ustreamer v4l-conf v4l-utils vgrabbj yavta motion
+  Значки и темы:
+   adwaita-icon-theme adwaita-qt 
+  Шрифты:
+   fonts-dejavu fonts-dejavu-extra
+Непонятно к чему:
+ virtual keyboard
+ bash-doc, …-doc
+ мониторинг, AIDE, ...
+ meson, ninja-build, git, svn, cmake, qt-creator, qmake, geany, gdb, valgrind, strace, ltrace
+ apt pkgs for generation of download request from non_connected machine
+ apt-build
+ apt-file
+ python-is-python2, python-is-python3
+ debootstrap
+ qemu-guest-agent?
+ surfraw
+ isenkram (автоподбор драйверов или прошивок или ...?)
+ wikipedia2text
+ "Что это?":
+  xpad password-gorilla king when quotatool yudit yudit-doc zim vis pluma-doc nedit ne ne-doc nano-tiny mle 
+  dmz-cursor-theme xcursor-themes
+  gnome-themes-extra mate-themes gnome-accessibility-themes
+  gtk-theme-switch metacity-themes
+  pidgin-themes
+  plymouth-themes
+  
+  
+ 
+ 
+
+
+Добавить пакеты: какие-то gconf editor, dconf editor, dbus explorer
+ что-то с plymouth glow theme
+
+
+Список что нужно, без названий пакетов:
+ Архив, из которого можно установить такую же систему (и ещё больше программ и чего надо) на другой ПК без интернета
+  в т.ч., установочный .iso, архивы .deb на все пакеты и всё для apt (м.б., достаточно сохранить /var/cache/apt и /var/lib/apt)
+ Доступная документация на всё, что используется
+ Среда XFCE с compiz+color_filter, с whiskermenu и с xkb-plugin. Эмулятор терминала xfce4-terminal
+ Редакторы текстовые mousepad, gedit
+ Настройка GrUB с текстовым выводом (terminal=console), с "quiet consoleblank=5" (без "splash") параметром ядра
+ Шифрование LUKS1 (если LUKS2 уязвимо к подталкиванию к расшифровке данных). Или через FreeBSD+GELI+qemu, если получится. Но Поддержка всех ПК в FreeBSD под вопросом (хотя и Linux, согласно интернету, может где-то не работать)
+ Браузеры links2, firefox, falkon
+ Консольный эмулятор терминала GNU screen
+ (и посмотреть, как работает tmux)
+ bash
+ Эмуляторы для ВМ (qemu, aqemu, libvirt, virt-manager, virt-viewer, ...) (и VirtualBox в архиве с зависимостями)
+  +: создание .iso (программы)
+ Архивы программ для Windows под ВМ (spice-space)
+ Драйвер монтирование ФС 9p (есть по умолчанию в LMDE5) (монтировать внутри ВМ)
+ Печать
+ Сканирование
+ Работа с PDF
+  Просмотр
+  создание
+   img2pdf
+   gimp
+   ...
+ Работа с DJVU
+  Просмотр
+  создание
+   осторожно, есть пакеты, которые делают не это (какие-то там serve или ...)
+ Просмотр
+  Изображений
+  Звука
+  Видео
+  Документов (pdf, djvu. epub, fb2, txt)
+ Редактирование
+  Изображений
+  Звука
+  Видео
+  Документов офис (xls, ods, otd, doc, docx, xlsx, ...)
+ Пересжатие
+  видео
+  аудио
+ Конвертация файлов
+  pdf  <-->...
+  djvu <-->...
+  html <-->...
+  txt  <-->...
+  odt, ods, ... <--> ...
+ Работа с архивами
+  zstd, xarchiver, file-roller, p7zip-full, tar, xz, gzip, bzip2, lzip
+ Поиск файлов и поиск по содержимому
+ Общие папки:
+  openssh-server (осторожно!), samba, vsftpd, other ftpd, minidlna, apache, nginx, netcat-openbsd, warpinator, ...
+ Настройка:
+  менеджеры пакетов и установка отдельных скачанных пакетов (см. также rpminstall, gdebi, debi-tool)
+  настройка пользователей и lightdm
+  настройка монтирования и использование smart (gnome disk utility, gsmartcontrol, ...)
+  пакеты для настройки quota (с программами quotacheck, setquota (или как там...), ...)
+  gruc-pc, grub-efi-amd64-bin (занрузчики BIOS, UEFI)
+  
+  
+ 
+  
+ 
+ 
+ 
+ 
+ 
+
+libvirt: 
+ <domain type="kvm" (or type="qemu" for TCG) xmlns:qemu="http://libvirt.org/schemas/domain/qemu/1.0" ...>
+  ...
+  <qemu:commandline>
+   <qemu:arg value="-no-reboot" />
+   <qemu:arg value="-no-shutdown" />
+  </qemu:commandline>
+ </domain>
+
+windows guest at libvirt with webdav:
+ 1. find "WebClient" inside regedit.exe and choose max file size
+ 2. use special script launched after enabling webdav service to mount disks
+ 3. Use special spice channel for webdavd
+
+seems like ext4 and ntfs shrink (or resize) tools can damage FS (launched via gparted)
+
+debian linux (GNU) packages:
+ virt-manager: configure and launch+control virtual machines with libvirt+qemu
+ virt-viewer: control launched virtual machines (libvirt+qemu) and supports spice webdav shared folders for windows guest OS
+
+VirtualBox:
+ VBoxManage internalcommands createrawvmdk -filename   ~/sda.vmdk -rawdisk /dev/sda
+ VBoxManage internalcommands createrawvmdk -filename C:\hdd0.vmdk -rawdisk \\.\PhysicalDrive0
+ VBoxManage ... # enable nested paging for one VM
+
+В Manjaro Linux файл с паролем к LUKS называется /crypto_keyfile.bin
+
+
+Перед установкой openssh-server:
+sudo dpkg-divert --add --local --rename  /etc/ssh/sshd_config ; sync  #
+После установки его: осторожно настроить и:
+sudo dpkg --configure openssh-server ; sync ; sudo systemctl stop ssh ; sudo systemctl disable ssh ; sync # 
+# проверить, что даёт это: sshd -t ; sshd -T
+
+
+GrUB2 iso boot:
+ menuentry "Debian 12 or LMDE5 LiveCD" {
+  uuid="88888888-4444-4444-4444-cccccccccccc"
+  iso_path=/iso/lmde5.iso
+  search --no-floppy --set=root --fs-uuid $uuid
+  loopback loop0 (${root})$iso_path
+  root=loop0
+  linux /boot/vmlinuz fromiso=/dev/disk/by-uuid/${uuid}${iso_path} ...
+  initrd /boot/initrd.gz
+  boot
+ }
+ 
+ menuentry "Debian 12 or LMDE5 LiveCD (other way (drugoy variant))" {
+  uuid="88888888-4444-4444-4444-cccccccccccc"
+  iso_path=/iso/lmde5.iso
+  search --no-floppy --set=root --fs-uuid $uuid
+  loopback loop0 (${root})$iso_path
+  linux (loop0)/boot/vmlinuz fromiso=/dev/disk/by-uuid/${uuid}${iso_path} ...
+  initrd (loop0)/boot/initrd.gz
+  boot
+ }
+ 
+ menuentry "... siduction iso livecd" {
+  ...
+  linux ... boot=fll ... consoleblank=2 # можно без consoleblank=2
+   # для lmde5 - boot=live, в ubuntu: boot=casper iso-scan/filename=$iso_path
+  initrd ...
+ }
+
+Команды GrUB:
+ 1. GrUB rescue:
+  ls
+  set root="hd0,3"
+  set prefix="(hd0,3)/boot/grub"
+  insmod normal
+  normal
+ 2. GrUB (normal):
+  ls
+  halt
+  reboot
+  search
+  loopback
+  linux16
+  linux
+  initrd16
+  initrd
+  boot
+  echo
+  read
+  sleep
+   root=hd0,2
+   chainloader +1
+   boot
+  set
+  insmod all_video
+  configfile (hd0,2)/boot/grub/grub.cfg
+  terminal_output
+   set payload=800x600x24,800x600 # перед командой linux
+   linux /boot/... ... # без vga=...
+   initrd /boot/...
+   echo OK, booting
+   boot
+  gfxmode=640x480x24
+  terminal_output gfxterm
+  terminal_output console
+  videoinfo
+  videotest 640x480x24
+  rdmsr
+  wrmsr # опасно
+
+установка grub:
+ grub-install --target=i386-pc --boot-directory=/boot /dev/sda
+ grub-install --target=i386-pc --boot-directory=/boot --force /dev/sda3
+  grub-install --target=x86_64-efi --boot-directory=/boot --efi-directory=/boot/efi --bootloader-id=boot
+  cp -iv /boot/efi/EFI/boot/grubx64.efi /boot/efi/EFI/boot/bootx64.efi
+  sync
+ 
+   
+
+
+Benchmark (проверка производительности 7z в тестовом запуске):
+7z b
+7z b -mmt=1 # 1 поток (1 thread)
+7z b -mmt=4 # 4 потока (4 threads)
+
